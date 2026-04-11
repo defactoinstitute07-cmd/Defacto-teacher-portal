@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "DM Sans", ui-serif, Georgia, serif;
+  
+  --color-brand-navy: #11203d;
+  --color-brand-blue: #213a68;
+  --color-brand-gold: #b3862f;
+  --color-brand-gold-light: #d4aa53;
+  --color-brand-cream: #f5efe3;
+}
+
+@layer base {
+  :root {
+    --premium-bg: 
+        radial-gradient(circle at top left, rgba(208, 176, 92, 0.35), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(34, 69, 122, 0.3), transparent 30%),
+        linear-gradient(135deg, #f5efe3 0%, #fff9f2 50%, #eef4ff 100%);
+  }
+
+  body {
+    @apply min-h-screen font-sans text-brand-navy;
+    background: var(--premium-bg);
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .bg-premium {
+    background: var(--premium-bg);
+  }
+  
+  .glass-card {
+    @apply bg-white/72 backdrop-blur-xl border border-brand-navy/12 shadow-2xl;
+  }
+  
+  .glass-card-login {
+    @apply bg-white/82 backdrop-blur-[20px] border border-brand-navy/12 shadow-2xl;
+  }
+
+  .premium-button {
+    @apply bg-linear-to-br from-brand-gold to-brand-gold-light text-[#1d1404] font-extrabold px-4.5 py-3.5 rounded-2xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(180,134,47,0.24)] disabled:opacity-70 disabled:cursor-progress;
+  }
+
+  .premium-input {
+    @apply w-full px-4 py-3.5 rounded-2xl border border-brand-blue/16 bg-white/92 outline-hidden transition-all duration-200 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/15 focus:-translate-y-0.5;
+  }
+
+  .animate-float-balloon {
+    animation: floatBalloon 15s linear infinite;
+  }
+}
+
+@keyframes floatBalloon {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.2; }
+  90% { opacity: 0.2; }
+  100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+}
