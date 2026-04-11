@@ -32,8 +32,10 @@ function Settings({ session }) {
         try {
             setLoading(true);
             const token = session.token;
+            const baseUrl = import.meta.env.VITE_API_URL || 
+                (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
             
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/change-password`, {
+            const response = await fetch(`${baseUrl}/api/teacher/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Save, Plus, AlertCircle, Search, Beaker, Check, X } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
+
 function ExamManagement({ session }) {
     const [subjectsData, setSubjectsData] = useState([]);
 
@@ -40,7 +43,7 @@ function ExamManagement({ session }) {
 
     const fetchInitialData = async () => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/subjects`, {
+            const res = await fetch(`${API_BASE_URL}/api/teacher/subjects`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error('Failed to fetch subjects');
@@ -52,7 +55,7 @@ function ExamManagement({ session }) {
             const classes = [...new Set(subs.map(s => s.classLevel).filter(Boolean))];
             setAvailableClasses(classes);
 
-            const recentRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/exams`, {
+            const recentRes = await fetch(`${API_BASE_URL}/api/teacher/exams`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (recentRes.ok) {
@@ -99,7 +102,7 @@ function ExamManagement({ session }) {
     const fetchExams = async (subjId) => {
         try {
             setLoadingExams(true);
-            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/exams?subjectId=${subjId}`, {
+            const res = await fetch(`${API_BASE_URL}/api/teacher/exams?subjectId=${subjId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error('Failed to fetch exams');
@@ -115,7 +118,7 @@ function ExamManagement({ session }) {
     const fetchStudents = async (examId) => {
         try {
             setLoadingStudents(true);
-            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/exams/${examId}/students`, {
+            const res = await fetch(`${API_BASE_URL}/api/teacher/exams/${examId}/students`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error('Failed to fetch students for this exam');
@@ -150,7 +153,7 @@ function ExamManagement({ session }) {
                 ? (currentSubject.batchIds[0]._id || currentSubject.batchIds[0])
                 : null;
 
-            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/exams`, {
+            const res = await fetch(`${API_BASE_URL}/api/teacher/exams`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -200,7 +203,7 @@ function ExamManagement({ session }) {
                 remarks: s.remarks
             }));
 
-            const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/teacher/exams/${selectedExam._id}/results`, {
+            const res = await fetch(`${API_BASE_URL}/api/teacher/exams/${selectedExam._id}/results`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

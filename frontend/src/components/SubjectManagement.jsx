@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, AlertCircle, Loader2, ArrowRight, ArrowLeft, Clock, CheckCircle2, CircleDashed, RotateCcw } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
 
 function SubjectManagement({ session }) {
     const [subjects, setSubjects] = useState([]);
