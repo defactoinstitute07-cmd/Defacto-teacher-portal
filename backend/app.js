@@ -15,10 +15,10 @@ app.use(
             // Allow requests with no origin (like mobile apps or curl)
             if (!origin) return callback(null, true);
             
-            if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+            if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app') || origin.endsWith('.defactoinstitute.in')) {
                 callback(null, true);
             } else {
-                callback(new Error('Not allowed by CORS'));
+                callback(new Error(`Not allowed by CORS: ${origin}`));
             }
         },
         credentials: true
