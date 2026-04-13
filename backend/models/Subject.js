@@ -133,4 +133,4 @@ subjectSchema.index({ classLevel: 1, name: 1 });
 subjectSchema.index({ batchIds: 1 });
 subjectSchema.index({ code: 1 }, { sparse: true });
 
-module.exports = mongoose.model('Subject', subjectSchema);
+module.exports = mongoose.models.Subject || mongoose.model('Subject', subjectSchema);

@@ -14,4 +14,4 @@ const examResultSchema = new mongoose.Schema({
 // Unique per student per exam
 examResultSchema.index({ examId: 1, studentId: 1 }, { unique: true });
 
-module.exports = mongoose.model('ExamResult', examResultSchema);
+module.exports = mongoose.models.ExamResult || mongoose.model('ExamResult', examResultSchema);

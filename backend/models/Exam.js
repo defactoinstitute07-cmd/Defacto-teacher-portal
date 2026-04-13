@@ -15,4 +15,4 @@ const examSchema = new mongoose.Schema({
     status: { type: String, enum: ['scheduled', 'completed', 'cancelled'], default: 'scheduled' }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Exam', examSchema);
+module.exports = mongoose.models.Exam || mongoose.model('Exam', examSchema);

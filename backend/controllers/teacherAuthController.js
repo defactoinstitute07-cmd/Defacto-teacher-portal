@@ -78,7 +78,8 @@ async function loginTeacher(req, res) {
     } catch (error) {
         console.error('Teacher login failed:', error);
         return res.status(500).json({
-            message: 'Unable to login right now. Please try again.'
+            message: 'Unable to login right now. Please try again.',
+            error: process.env.NODE_ENV === 'production' ? 'Internal Server Error' : error.message
         });
     }
 }

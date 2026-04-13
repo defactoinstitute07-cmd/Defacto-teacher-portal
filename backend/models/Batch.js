@@ -6,4 +6,4 @@ const batchSchema = new mongoose.Schema({
     isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Batch', batchSchema);
+module.exports = mongoose.models.Batch || mongoose.model('Batch', batchSchema);
