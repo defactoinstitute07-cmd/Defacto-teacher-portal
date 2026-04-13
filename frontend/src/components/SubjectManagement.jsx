@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, AlertCircle, Loader2, ArrowRight, ArrowLeft, Clock, CheckCircle2, CircleDashed, RotateCcw } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
+import { buildApiUrl } from '../lib/api';
 
 function SubjectManagement({ session }) {
     const [subjects, setSubjects] = useState([]);
@@ -19,7 +17,7 @@ function SubjectManagement({ session }) {
             try {
                 if (!session?.token) throw new Error('No authentication token found.');
 
-                const response = await fetch(`${API_BASE_URL}/api/teacher/subjects`, {
+                const response = await fetch(buildApiUrl('/api/teacher/subjects'), {
                     headers: {
                         'Authorization': `Bearer ${session.token}`
                     }
@@ -51,7 +49,7 @@ function SubjectManagement({ session }) {
     const handleUpdateChapterStatus = async (subjectId, chapterId, targetStatus) => {
         try {
             setUpdatingChapterId(chapterId);
-            const response = await fetch(`${API_BASE_URL}/api/teacher/subjects/${subjectId}/chapters/${chapterId}/status`, {
+            const response = await fetch(buildApiUrl(`/api/teacher/subjects/${subjectId}/chapters/${chapterId}/status`), {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

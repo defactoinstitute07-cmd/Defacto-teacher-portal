@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Lock, Eye, EyeOff, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { buildApiUrl } from '../lib/api';
 
 function Settings({ session }) {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -32,10 +33,8 @@ function Settings({ session }) {
         try {
             setLoading(true);
             const token = session.token;
-            const baseUrl = import.meta.env.VITE_API_URL || 
-                (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
-            
-            const response = await fetch(`${baseUrl}/api/teacher/change-password`, {
+
+            const response = await fetch(buildApiUrl('/api/teacher/change-password'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

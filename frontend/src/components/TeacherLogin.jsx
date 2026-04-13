@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||
-    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/api' : 'http://localhost:5000');
+import { buildApiUrl } from '../lib/api';
 
 function TeacherLogin({ onLoginSuccess }) {
     const [formData, setFormData] = useState({
@@ -27,7 +25,7 @@ function TeacherLogin({ onLoginSuccess }) {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/teacher/login`, {
+            const response = await fetch(buildApiUrl('/api/teacher/login'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

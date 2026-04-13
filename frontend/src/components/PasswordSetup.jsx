@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, LockKeyhole } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
+import { buildApiUrl } from '../lib/api';
 
 function PasswordSetup({ email, regNo, onSetupSuccess }) {
     const [newPassword, setNewPassword] = useState('');
@@ -22,7 +20,7 @@ function PasswordSetup({ email, regNo, onSetupSuccess }) {
         setError('');
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/teacher/reset-password`, {
+            const response = await fetch(buildApiUrl('/api/teacher/reset-password'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

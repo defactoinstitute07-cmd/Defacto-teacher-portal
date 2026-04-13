@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Save, Calendar, Users, ClipboardCheck, AlertCircle, ArrowDownAZ, ArrowUpZA } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
+import { buildApiUrl } from '../lib/api';
 
 function AttendanceManagement({ session }) {
     const [subjects, setSubjects] = useState([]);
@@ -39,7 +37,7 @@ function AttendanceManagement({ session }) {
     const fetchSubjects = async () => {
         try {
             setError(null);
-            const response = await fetch(`${API_BASE_URL}/api/teacher/subjects`, {
+            const response = await fetch(buildApiUrl('/api/teacher/subjects'), {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -64,7 +62,7 @@ function AttendanceManagement({ session }) {
             setLoading(true);
             setIsLocked(false);
             setError(null);
-            const response = await fetch(`${API_BASE_URL}/api/teacher/attendance/students?subjectId=${selectedSubject}&date=${selectedDate}`, {
+            const response = await fetch(buildApiUrl(`/api/teacher/attendance/students?subjectId=${selectedSubject}&date=${selectedDate}`), {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -130,7 +128,7 @@ function AttendanceManagement({ session }) {
                 throw new Error("No attendance marks selected.");
             }
 
-            const response = await fetch(`${API_BASE_URL}/api/teacher/attendance/mark`, {
+            const response = await fetch(buildApiUrl('/api/teacher/attendance/mark'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

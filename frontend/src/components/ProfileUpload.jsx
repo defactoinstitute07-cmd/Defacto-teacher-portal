@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { UploadCloud, CheckCircle2 } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
+import { buildApiUrl } from '../lib/api';
 
 function ProfileUpload({ teacherId, onUploadSuccess, onSkip }) {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -32,7 +30,7 @@ function ProfileUpload({ teacherId, onUploadSuccess, onSkip }) {
         formData.append('profileImage', selectedFile);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/teacher/upload-profile-image/${teacherId}`, {
+            const response = await fetch(buildApiUrl(`/api/teacher/upload-profile-image/${teacherId}`), {
                 method: 'POST',
                 body: formData,
             });

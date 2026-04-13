@@ -1,16 +1,9 @@
 const app = require('../backend/app');
 const connectDb = require('../backend/config/db');
 
-// In a serverless environment, we need to ensure the DB is connected
-// for every function execution, but reuse the connection if it exists.
-let isConnected = false;
-
 const handler = async (req, res) => {
     try {
-        if (!isConnected) {
-            await connectDb();
-            isConnected = true;
-        }
+        await connectDb();
         return app(req, res);
     } catch (error) {
         console.error('CRITICAL: Failed to connect to DB in serverless handler:', error);
