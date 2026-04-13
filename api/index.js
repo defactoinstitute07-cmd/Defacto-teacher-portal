@@ -1,7 +1,7 @@
 const app = require('../backend/app');
 const connectDb = require('../backend/config/db');
 
-const handler = async (req, res) => {
+module.exports = async (req, res) => {
     try {
         await connectDb();
         return app(req, res);
@@ -14,5 +14,3 @@ const handler = async (req, res) => {
         });
     }
 };
-
-module.exports = handler;
