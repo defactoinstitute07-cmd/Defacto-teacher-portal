@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||
-    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/_/backend' : 'http://localhost:5000');
+    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/api' : 'http://localhost:5000');
 
 function TeacherLogin({ onLoginSuccess }) {
     const [formData, setFormData] = useState({
