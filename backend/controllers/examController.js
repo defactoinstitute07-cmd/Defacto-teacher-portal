@@ -35,10 +35,19 @@ async function createExam(req, res) {
         await newExam.save();
 
         // --- Async Notification Trigger ---
-        Student.find({ batchId: { $in: subject.batchIds }, status: 'active' })
+        const targetBatchIds = Array.isArray(subject.batchIds) ? [...subject.batchIds] : [];
+        if (batchId && !targetBatchIds.some(id => String(id) === String(batchId))) {
+            targetBatchIds.push(batchId);
+        }
+
+        Student.find({ batchId: { $in: targetBatchIds }, status: 'active' })
             .select('name email deviceTokens')
             .lean()
             .then(students => {
+                if (students.length === 0) {
+                    console.warn(`⚠️ No active students found to notify for exam '${newExam.name}' in batches:`, targetBatchIds);
+                    return;
+                }
                 const dynamicData = {
                     examName: newExam.name,
                     subject: newExam.subject,
@@ -46,11 +55,12 @@ async function createExam(req, res) {
                     totalMarks: newExam.totalMarks,
                     passingMarks: newExam.passingMarks
                 };
+                console.log(`📢 Notifying ${students.length} students about new exam: ${newExam.name}`);
                 students.forEach(student => {
                     sendExamNotification('testAnnouncement', student, dynamicData);
                 });
             })
-            .catch(err => console.error('Error dispatching test announcement notifications:', err));
+            .catch(err => console.error('❌ Error dispatching test announcement notifications:', err));
 
         res.status(201).json({ message: 'Exam created successfully', exam: newExam });
     } catch (error) {
@@ -187,6 +197,11 @@ async function saveResults(req, res) {
 
         if (bulkOps.length > 0) {
             await ExamResult.bulkWrite(bulkOps);
+
+            if (exam.status !== 'completed') {
+                exam.status = 'completed';
+                await exam.save();
+            }
         }
 
         // --- Async Notification Trigger ---
@@ -195,9 +210,15 @@ async function saveResults(req, res) {
             .select('name email deviceTokens')
             .lean()
             .then(students => {
+                if (students.length === 0) {
+                    console.warn(`⚠️ No active students found to notify for results of exam '${exam.name}'`);
+                    return;
+                }
+
                 const resultsMap = {};
                 resultsData.forEach(r => resultsMap[r.studentId] = r);
                 
+                console.log(`📢 Notifying ${students.length} students about exam results: ${exam.name}`);
                 students.forEach(student => {
                     const result = resultsMap[student._id.toString()];
                     if (!result || !result.isPresent) return; // Skip absentees
@@ -213,7 +234,7 @@ async function saveResults(req, res) {
                     sendExamNotification('examResult', student, dynamicData);
                 });
             })
-            .catch(err => console.error('Error dispatching exam result notifications:', err));
+            .catch(err => console.error('❌ Error dispatching exam result notifications:', err));
 
         res.json({ message: 'Results saved successfully.' });
     } catch (error) {

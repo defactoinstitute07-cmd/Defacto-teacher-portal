@@ -12,6 +12,7 @@ function ExamManagement({ session }) {
     // Derived Lists for Dropdowns
     const [availableClasses, setAvailableClasses] = useState([]);
     const [availableSubjects, setAvailableSubjects] = useState([]);
+    const [availableChapters, setAvailableChapters] = useState([]);
 
     // Exam Management State
     const [exams, setExams] = useState([]);
@@ -34,6 +35,25 @@ function ExamManagement({ session }) {
     const [successMessage, setSuccessMessage] = useState('');
 
     const token = session?.token;
+
+    const getSubjectChapters = (subjectId) => {
+        const subject = subjectsData.find(s => s._id === subjectId);
+        return Array.isArray(subject?.chapters) ? subject.chapters : [];
+    };
+
+    const getDefaultChapterName = (chapters) => {
+        const validChapters = Array.isArray(chapters) ? chapters.filter(ch => ch?.name) : [];
+        if (validChapters.length === 0) {
+            return '';
+        }
+
+        const preferredChapter =
+            validChapters.find(ch => ch.status === 'ongoing') ||
+            validChapters.find(ch => ch.status === 'upcoming') ||
+            validChapters[0];
+
+        return preferredChapter.name;
+    };
 
     useEffect(() => {
         fetchInitialData();
@@ -84,10 +104,16 @@ function ExamManagement({ session }) {
         setSelectedExam(null);
         if (selectedSubject) {
             fetchExams(selectedSubject);
+
+            const subjectChapters = getSubjectChapters(selectedSubject);
+            setAvailableChapters(subjectChapters);
+            setNewExam(prev => ({ ...prev, chapter: getDefaultChapterName(subjectChapters) }));
         } else {
             setExams([]);
+            setAvailableChapters([]);
+            setNewExam(prev => ({ ...prev, chapter: '' }));
         }
-    }, [selectedSubject]);
+    }, [selectedSubject, subjectsData]);
 
     useEffect(() => {
         if (selectedExam) {
@@ -174,10 +200,11 @@ function ExamManagement({ session }) {
             }
 
             const data = await res.json();
+            const defaultChapter = getDefaultChapterName(getSubjectChapters(selectedSubject));
             setExams([data.exam, ...exams]);
             setRecentExams([data.exam, ...recentExams]);
             setShowCreateExam(false);
-            setNewExam({ name: '', chapter: '', date: '', totalMarks: 20, passingMarks: 15 });
+            setNewExam({ name: '', chapter: defaultChapter, date: '', totalMarks: 20, passingMarks: 15 });
             setSuccessMessage('Exam created successfully!');
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (err) {
@@ -412,14 +439,21 @@ function ExamManagement({ session }) {
                                 </div>
                                 <div className="flex-1 w-full">
                                     <label className="block text-xs font-bold text-brand-navy/60 uppercase tracking-wider mb-2">Chapter / Topic</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         required
                                         value={newExam.chapter}
                                         onChange={(e) => setNewExam({ ...newExam, chapter: e.target.value })}
-                                        placeholder="e.g. Thermodynamics"
-                                        className="w-full bg-white border border-brand-navy/10 rounded-xl px-4 py-2.5 text-brand-navy text-sm outline-none focus:border-brand-gold transition-colors"
-                                    />
+                                        className="w-full bg-white border border-brand-navy/10 rounded-xl px-4 py-2.5 text-brand-navy text-sm outline-none focus:border-brand-gold transition-colors cursor-pointer"
+                                    >
+                                        <option value="">Select Chapter</option>
+                                        {availableChapters.length > 0 ? (
+                                            availableChapters.map((ch, idx) => (
+                                                <option key={idx} value={ch.name}>{ch.name}</option>
+                                            ))
+                                        ) : (
+                                            <option value="" disabled>No chapters found for this subject</option>
+                                        )}
+                                    </select>
                                 </div>
                                 <div className="w-full lg:w-48">
                                     <label className="block text-xs font-bold text-brand-navy/60 uppercase tracking-wider mb-2">Date</label>

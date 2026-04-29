@@ -60,13 +60,27 @@ function TeacherLogin({ onLoginSuccess }) {
                 <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-brand-navy/5 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div className="flex flex-col items-center gap-4 relative z-10">
-                    <div className=" h-20 sm:w-24 sm:h-24 rounded-2xl bg-brand-navy/50 shadow-sm flex items-center justify-center p-2 border border-brand-navy/5">
-                        <img
-                            src="https://www.defactoinstitute.in/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdmswb6fya%2Fimage%2Fupload%2Fv1775635083%2Ferp_uploads%2Ffwp2aeerokjfljm2aw2a.png&w=256&q=75"
-                            alt="Institute Logo"
-                            className="w-full h-full  object-contain drop-shadow-[0_4px_12px_rgba(179,134,47,0.15)] transition-transform hover:scale-105 duration-300"
-                        />
-                    </div>
+                    <div className="flex w-full items-center p-4 bg-white">
+  {/* Logo Container (Left Side) */}
+  <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-xl border border-[#D5A021] bg-[#0A1128]  shadow-xl">
+    <img
+      src="https://res.cloudinary.com/dsks5swu1/image/upload/v1775565407/erp_uploads/xcoemwx25dr8gcjkm4ha.png"
+      alt="Defacto Institute Logo"
+      loading="lazy"
+      className="h-full w-full rounded-xl object-contain"
+    />
+  </div>
+
+  {/* Text Container (Right Side) */}
+  <div className="flex flex-col ml-4 font-sans text-left">
+    <h1 className="m-0 p-0 text-3xl sm:text-4xl font-extrabold text-[#F9BF29] tracking-tight antialiased">
+      Defacto
+    </h1>
+    <p className="m-0 p-0 text-sm sm:text-base font-semibold text-[#0A1128] antialiased">
+      Institute <span className="font-light text-[#A0A0A0]">|</span> BHANIYAWALA
+    </p>
+  </div>
+</div>
 
                     <div className="text-center space-y-1.5">
                         <h2 className="text-2xl sm:text-3xl font-serif font-bold text-brand-navy tracking-tight">
