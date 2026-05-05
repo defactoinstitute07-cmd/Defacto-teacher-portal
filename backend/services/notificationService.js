@@ -31,21 +31,23 @@ if (fbProjectId && fbClientEmail && fbPrivateKey) {
 
 // Initialize Nodemailer Transport
 let transporter = null;
-if (process.env.GMAIL_USER && process.env.GMAIL_PASS) {
+if (process.env.BREVO_SMTP_USER && process.env.BREVO_SMTP_KEY) {
     try {
         transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
+            port: parseInt(process.env.BREVO_SMTP_PORT) || 587,
+            secure: false, // true for 465, false for other ports
             auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_PASS, // This should be an App Password
+                user: process.env.BREVO_SMTP_USER,
+                pass: process.env.BREVO_SMTP_KEY,
             },
         });
-        console.log('✅ Nodemailer (Gmail) transport initialized.');
+        console.log('✅ Nodemailer (Brevo SMTP) transport initialized.');
     } catch (error) {
         console.error('❌ Failed to initialize Nodemailer:', error.message);
     }
 } else {
-    console.warn('⚠️ Gmail credentials missing. Email notifications will be skipped.');
+    console.warn('⚠️ Brevo SMTP credentials missing. Email notifications will be skipped.');
 }
 
 
@@ -59,7 +61,7 @@ async function sendEmail(studentEmail, subject, htmlBody) {
     }
     try {
         const mailOptions = {
-            from: `"Defacto Institute" <${process.env.GMAIL_USER}>`,
+            from: `"Defacto Institute" <${process.env.BREVO_SMTP_USER}>`,
             to: studentEmail,
             subject: subject,
             html: htmlBody,
